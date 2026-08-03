@@ -1,0 +1,1291 @@
+
+function cambiarStatus(nuevoStatus) {
+  var storeId = STATE.tiendaData ? STATE.tiendaData.storeId : STATE.storeId;
+  if (!storeId) {
+    mostrarMensajeStatus('No se encontró el ID de la tienda', 'error');
+    return;
+  }
+  
+  var statusActual = STATE.statusActual || '';
+  
+  // No hacer nada si es el mismo status
+  if (statusActual === nuevoStatus) {
+    mostrarMensajeStatus('El estado ya es ' + nuevoStatus, 'error');
+    return;
+  }
+  
+  // Confirmación
+  var accion = nuevoStatus === 'activo' ? 'activar' : 'suspender';
+  if (!confirm('¿Estás seguro de ' + accion + ' tu servicio?\n\n' +
+    (nuevoStatus === 'suspendido' ? '⚠️ Al suspender, dejarás de aparecer en el directorio público.' : 
+     '✅ Al activar, volverás a aparecer en el directorio.'))) {
+    return;
+  }
+  
+  mostrarMensajeStatus('Cambiando estado...', 'loading');
+  
+  // Deshabilitar botones mientras se procesa
+  $('btn-activar').disabled = true;
+  $('btn-suspender').disabled = true;
+  
+  // Llamar al backend - usar external.store.status
+  callGAS({
+    action: 'external.store.status',
+    storeId: storeId,
+    status: nuevoStatus,
+    token: STATE.token
+  })
+  .then(function(res) {
+    if (res && res.ok) {
+      mostrarMensajeStatus('Estado actualizado a: ' + nuevoStatus, 'success');
+      
+      // Actualizar UI
+      STATE.statusActual = nuevoStatus;
+      STATE.tiendaData.status = nuevoStatus;
+      
+      // Actualizar badges y banner
+      $('d-status').innerHTML = statusBadge(nuevoStatus);
+      
+      // Actualizar banner de estado
+      var banner = $('status-banner');
+      if (nuevoStatus === 'activo' || nuevoStatus === 'active') {
+        banner.className = 'status-banner activo';
+        $('banner-icon').textContent = '✓';
+        $('banner-title').textContent = 'Cuenta activa';
+        $('banner-desc').textContent = 'Tu perfil está visible en el directorio Easylink.';
+        $('btn-activar').classList.add('active-btn');
+        $('btn-activar').disabled = true;
+        $('btn-suspender').disabled = false;
+        $('btn-suspender').classList.remove('suspended-btn');
+      } else {
+        banner.className = 'status-banner suspendido';
+        $('banner-icon').textContent = '⚠️';
+        $('banner-title').textContent = 'Tu cuenta está suspendida';
+        $('banner-desc').textContent = 'Puedes ver tus datos pero no aparecerás en el directorio público.';
+        $('btn-suspender').classList.add('suspended-btn');
+        $('btn-suspender').disabled = true;
+        $('btn-activar').disabled = false;
+        $('btn-activar').classList.remove('active-btn');
+      }
+      banner.style.display = 'flex';
+      
+      // Actualizar meta badges
+      actualizarMetaBadges();
+      
+    } else {
+      var error = (res && res.error) ? res.error : 'Error al cambiar estado';
+      mostrarMensajeStatus(error, 'error');
+      // Re-habilitar botones
+      habilitarBotonesSegunStatus();
+    }
+  })
+  .catch(function(e) {
+    mostrarMensajeStatus('Error de conexión: ' + e.message, 'error');
+    habilitarBotonesSegunStatus();
+  });
+}
+
+function mostrarMensajeStatus(mensaje, tipo) {
+  var msg = $('msg-status');
+  msg.textContent = mensaje;
+  msg.className = tipo;
+  msg.style.display = 'block';
+  
+  if (tipo === 'success' || tipo === 'error') {
+    setTimeout(function() {
+      msg.style.display = 'none';
+    }, 4000);
+  }
+}
+
+function habilitarBotonesSegunStatus() {
+  var status = STATE.statusActual || '';
+  if (status === 'activo' || status === 'active') {
+    $('btn-activar').disabled = true;
+    $('btn-suspender').disabled = false;
+  } else if (status === 'suspendido' || status === 'suspended') {
+    $('btn-activar').disabled = false;
+    $('btn-suspender').disabled = true;
+  } else {
+    $('btn-activar').disabled = false;
+    $('btn-suspender').disabled = false;
+  }
+}
+
+function actualizarMetaBadges() {
+  var badges = '';
+  var status = STATE.statusActual || (STATE.tiendaData ? STATE.tiendaData.status : '');
+  var cfg = STATE.tiendaData ? (STATE.tiendaData.config || {}) : {};
+  
+  badges += statusBadge(status);
+  if (cfg.Movil === true || cfg.Movil === 'TRUE' || cfg.Movil === 'true') {
+    badges += '<span class="badge badge-movil">🛵 Servicio móvil</span>';
+  }
+  if (cfg.tipoNegocio) {
+    badges += '<span class="badge badge-gray">' + cfg.tipoNegocio + '</span>';
+  }
+  $('profile-meta').innerHTML = badges;
+}MIME-Version: 1.0
+Date: Tue, 14 Apr 2026 06:56:37 -0700
+Message-ID: <CAEB3WCOuSfok43R5fx5Hn=7+bgSy2nKoqMTf-wiB7PFWusCChg@mail.gmail.com>
+Subject: =?UTF-8?Q?segurdad_al_due=C3=B1o?=
+From: Proyecto solar mexico <proyectosolaronline@gmail.com>
+To: Proyecto solar mexico <proyectosolaronline@gmail.com>
+Content-Type: multipart/alternative; boundary="000000000000d6d7f8064f6bf7d1"
+
+--000000000000d6d7f8064f6bf7d1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+=E2=9C=85 *Aqu=C3=AD tienes el documento completo*, listo para copiar y peg=
+ar. Todo est=C3=A1
+organizado, claro y en un solo bloque.
+------------------------------
+
+*DOCUMENTO: PROTECCI=C3=93N AL DUE=C3=91O DE LA TIENDA* *Objetivo:* Protege=
+r el
+n=C3=BAmero de WhatsApp del due=C3=B1o contra extorsi=C3=B3n y contacto dir=
+ecto no deseado.
+MOTIVO DE LOS CAMBIOS
+
+En M=C3=A9xico es com=C3=BAn recibir mensajes de extorsi=C3=B3n o spam cuan=
+do el n=C3=BAmero de
+WhatsApp est=C3=A1 visible p=C3=BAblicamente. Con estos cambios se logra lo=
+ siguiente:
+
+   - El n=C3=BAmero de WhatsApp *solo ser=C3=A1 visible* para usuarios que =
+tengan una
+   cuenta registrada.
+   - Cualquier usuario (incluso sin cuenta) podr=C3=A1 agregar productos al
+   carrito.
+   - Al intentar confirmar un pedido sin estar registrado, aparecer=C3=A1 u=
+n
+   modal controlado con opciones seguras.
+   - Opci=C3=B3n =E2=80=9CSolo dejar mi tel=C3=A9fono=E2=80=9D enviar=C3=A1=
+ el resumen del pedido por
+   WhatsApp *sin mostrar el n=C3=BAmero* al cliente.
+   - Se elimina la opci=C3=B3n f=C3=A1cil de =E2=80=9Ccontinuar como invita=
+do=E2=80=9D para reducir
+   pedidos falsos o de riesgo.
+   - Si el usuario decide cancelar, el carrito se vac=C3=ADa autom=C3=A1tic=
+amente.
+
+Esto reduce significativamente el riesgo de exposici=C3=B3n del n=C3=BAmero=
+ personal
+del due=C3=B1o.
+------------------------------
+PASO A PASO - MODIFICACIONES (Copy & Paste) PASO 1: Agregar la funci=C3=B3n=
+ de
+protecci=C3=B3n (Recomendado al final del <script>)
+
+Busca la =C3=BAltima parte del c=C3=B3digo antes de </script> (despu=C3=A9s=
+ de la =C3=BAltima
+funci=C3=B3n) y *pega esto* justo antes del cierre </script>:
+JavaScript
+
+// =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D PROTE=
+CCI=C3=93N AL DUE=C3=91O DE LA TIENDA
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D// Oculta=
+ WhatsApp para usuarios no
+registradosfunction actualizarVisibilidadWA() {  var debeMostrarWA =3D
+!!customer;   // Solo mostrar si el usuario est=C3=A1 logueado
+  // Bot=C3=B3n WhatsApp en Hero  var heroWA =3D
+document.getElementById('hero-wa-btn');  if (heroWA)
+heroWA.style.display =3D debeMostrarWA ? '' : 'none';
+  // Bot=C3=B3n WhatsApp flotante (FAB)  var fabWA =3D
+document.getElementById('fab-wa-btn');  if (fabWA) fabWA.style.display
+=3D debeMostrarWA ? 'flex' : 'none';
+  // Barra inferior de redes (si existe)  var bottomBar =3D
+document.getElementById('bottom-bar');  if (bottomBar)
+bottomBar.style.display =3D debeMostrarWA ? 'flex' : 'none';
+}
+
+PASO 2: Modificar la funci=C3=B3n updateNav()
+
+Busca esta funci=C3=B3n:
+JavaScript
+
+function updateNav() {
+
+Al final de esta funci=C3=B3n (justo antes del =C3=BAltimo } ), agrega esta=
+ l=C3=ADnea:
+JavaScript
+
+actualizarVisibilidadWA();
+
+Quedar=C3=ADa as=C3=AD al final de la funci=C3=B3n:
+JavaScript
+
+}  actualizarVisibilidadWA();   // =E2=86=90 Nueva l=C3=ADnea agregada
+}
+
+PASO 3: Llamar a la funci=C3=B3n de protecci=C3=B3n al cargar la p=C3=A1gin=
+a
+
+Busca dentro de window.addEventListener('load', async function() { Despu=C3=
+=A9s
+de la l=C3=ADnea updateNav(); agrega:
+JavaScript
+
+actualizarVisibilidadWA();
+
+Ejemplo de c=C3=B3mo debe quedar:
+JavaScript
+
+updateNav();    actualizarVisibilidadWA();   // =E2=86=90 Nueva l=C3=ADnea
+updateBanner();    initMap();    showV('catalog');
+
+PASO 4: Reemplazar la funci=C3=B3n showCheckout() + agregar nuevas funcione=
+s
+
+Busca la funci=C3=B3n completa:
+JavaScript
+
+function showCheckout() {
+
+*Borra toda la funci=C3=B3n* y reempl=C3=A1zala por este bloque completo:
+JavaScript
+
+function showCheckout() {  if (!cart.length) { toast('Agrega productos
+primero'); return; }  if (customer) { _doShowCheckout(); return; }
+    // Sin sesi=C3=B3n =E2=86=92 mostrar modal de protecci=C3=B3n  var el =
+=3D
+document.getElementById('csm-telefono');  if (el) el.value =3D '';  var
+err =3D document.getElementById('csm-err');  if (err) err.style.display
+=3D 'none';  document.getElementById('csm-phone-block').style.display =3D
+'none';  document.getElementById('csm-main-block').style.display =3D
+'block';  document.getElementById('csm-bg').classList.add('on');
+}
+function closeSuggestModal() {
+document.getElementById('csm-bg').classList.remove('on');
+}
+function abandonarPedido() {  cart =3D []; save(); renderGrid();
+updateNav();  closeSuggestModal(); closeCart();  toast('Carrito
+vaciado');  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function mostrarFormTelefono() {
+document.getElementById('csm-main-block').style.display =3D 'none';
+document.getElementById('csm-phone-block').style.display =3D 'block';
+}
+function confirmarConTelefono() {  var tel =3D
+(document.getElementById('csm-telefono').value || '').trim();  var err
+=3D document.getElementById('csm-err');  if (!tel ||
+tel.replace(/\D/g,'').length < 8) {    err.style.display =3D 'block';
+err.textContent =3D 'Ingresa un n=C3=BAmero v=C3=A1lido para poder contacta=
+rte';
+ return;
+  }  err.style.display =3D 'none';  var phone =3D
+storeWA.replace(/\D/g,'');  if (!phone) { toast('Esta tienda no tiene
+WhatsApp configurado'); return; }
+    var msg =3D 'Hola! Quiero hacer un pedido en *' + storeName +
+'*:\n\n';  cart.forEach(function(c, i) {    msg +=3D (i+1) + '. ' +
+c.name + ' x' + c.qty + ' =E2=80=94 ' + fmt(c.price * c.qty) + '\n';
+  });  msg +=3D '\nTotal estimado: *' + fmt(cartTotal()) + '*';  msg +=3D
+'\n\nMi n=C3=BAmero de contacto: *' + tel + '*';
+    window.open('https://wa.me/' + phone + '?text=3D' +
+encodeURIComponent(msg), '_blank');
+    cart =3D []; save(); renderGrid(); updateNav();
+closeSuggestModal(); closeCart();  toast('Pedido enviado =E2=80=94 te
+contactaremos pronto');
+}
+
+PASO 5: Reemplazar la funci=C3=B3n addToCart()
+
+Busca:
+JavaScript
+
+function addToCart(pid) {
+
+Reemplaza toda la funci=C3=B3n por esta versi=C3=B3n:
+JavaScript
+
+function addToCart(pid) {  var p =3D products.find(function(x) { return
+x.productId =3D=3D=3D pid; }); if (!p) return;  var item =3D
+cart.find(function(c) { return c.productId =3D=3D=3D pid; });  var
+isMayorista =3D customer ? customer.isMayorista || false : false;  var
+price =3D (isMayorista && p.wholesalePrice !=3D=3D undefined &&
+p.wholesalePrice !=3D=3D '') ? Number(p.wholesalePrice) : Number(p.price);
+ var sinStock =3D Number(p.stock || 0) <=3D 0;  if (item) item.qty++;
+else cart.push({ productId: pid, name: p.name, price: price, imageUrl:
+p.imageUrl || '', qty: 1, sinStock: sinStock });  save();
+renderGrid(); renderCartList();  toast(sinStock ? 'Solicitud
+registrada =E2=80=94 verificaremos existencia' : '"' + p.name + '" a=C3=B1a=
+dido al
+carrito');
+}
+
+PASO 6: Cambiar el bot=C3=B3n para usuarios no registrados en renderGridPag=
+e()
+
+Dentro de la funci=C3=B3n renderGridPage(), busca este bloque:
+JavaScript
+
+} else if (!customer) {  ctaHTML =3D '<button class=3D"add-btn guest"
+onclick=3D"event.stopPropagation();showAuth(\'register\')">+</button>';
+
+*Reempl=C3=A1zalo* por:
+JavaScript
+
+} else if (!customer) {  var qty2 =3D inCartQty ? inCartQty.qty : 0;
+ctaHTML =3D '<button class=3D"add-btn ' + (qty2 > 0 ? 'in-cart' : '') + '"
+onclick=3D"event.stopPropagation();addToCart(\'' + p.productId + '\')">'
++ (qty2 > 0 ? qty2 : '+') + '</button>';
+
+PASO 7: Reemplazar el modal sugestivo completo
+
+Busca este bloque:
+HTML
+
+<div class=3D"modal-bg" id=3D"csm-bg"
+onclick=3D"if(event.target=3D=3D=3Dthis)closeSuggestModal()">
+
+Reemplaza *todo el modal* (desde <div class=3D"modal-bg" id=3D"csm-bg" hast=
+a su
+</div> correspondiente) por este nuevo:
+HTML
+
+<div class=3D"modal-bg" id=3D"csm-bg">  <div class=3D"checkout-suggest-moda=
+l">
+    <!-- BLOQUE PRINCIPAL -->    <div id=3D"csm-main-block">      <div
+class=3D"csm-icon">=F0=9F=9B=8D=EF=B8=8F</div>      <div class=3D"csm-title=
+">=C2=BFC=C3=B3mo quieres
+continuar?</div>      <div class=3D"csm-sub">Crea una cuenta para
+rastrear pedidos y acceder a precios especiales, o d=C3=A9janos solo tu
+tel=C3=A9fono para contactarte.</div>      <div class=3D"csm-btns">
+<button class=3D"csm-btn-primary"
+onclick=3D"closeSuggestModal();showAuth('register')">
+          Crear cuenta gratis        </button>        <button
+class=3D"csm-btn-secondary"
+onclick=3D"closeSuggestModal();showAuth('login')">
+          Ya tengo cuenta        </button>        <button
+class=3D"csm-btn-ghost" onclick=3D"mostrarFormTelefono()">
+          Solo dejar mi tel=C3=A9fono =E2=86=92        </button>        <di=
+v
+style=3D"border-top:1px solid var(--border);margin:8px 0"></div>
+<button class=3D"csm-btn-ghost"
+style=3D"color:var(--danger);text-decoration:none;font-size:11px"
+onclick=3D"abandonarPedido()">
+          Cancelar y vaciar carrito        </button>      </div>    </div>
+    <!-- BLOQUE TEL=C3=89FONO -->    <div id=3D"csm-phone-block"
+style=3D"display:none">      <div class=3D"csm-icon">=F0=9F=93=9E</div>    =
+  <div
+class=3D"csm-title">Tu n=C3=BAmero de contacto</div>      <div
+class=3D"csm-sub">Te contactaremos por WhatsApp para confirmar
+disponibilidad y cerrar tu pedido.</div>      <div class=3D"fg"
+style=3D"margin-bottom:8px;text-align:left">        <label
+style=3D"display:block;font-size:11px;font-weight:600;color:var(--muted);ma=
+rgin-bottom:4px;letter-spacing:.04em;text-transform:uppercase">Tel=C3=A9fon=
+o
+*</label>        <input id=3D"csm-telefono" type=3D"tel" placeholder=3D"+52
+xxx xxx xxxx"          style=3D"width:100%;padding:10px 12px;border:1px
+solid var(--border);border-radius:var(--r);font-size:14px;font-family:var(-=
+-font-b);color:var(--text);background:var(--surface);outline:none"
+         onkeydown=3D"if(event.key=3D=3D=3D'Enter')confirmarConTelefono()"/=
+>
+   </div>      <div id=3D"csm-err"
+style=3D"display:none;color:var(--danger);font-size:12px;margin-bottom:8px;=
+padding:8px
+12px;background:#fce8e6;border-radius:var(--r);border:1px solid
+#f5c6c2"></div>      <div class=3D"csm-btns">        <button
+class=3D"csm-btn-primary" onclick=3D"confirmarConTelefono()">
+          Enviar pedido por WhatsApp        </button>        <button
+class=3D"csm-btn-ghost"
+onclick=3D"mostrarFormTelefono();document.getElementById('csm-main-block').=
+style.display=3D'block';document.getElementById('csm-phone-block').style.di=
+splay=3D'none'">
+          =E2=86=90 Volver        </button>        <div style=3D"border-top=
+:1px
+solid var(--border);margin:4px 0"></div>        <button
+class=3D"csm-btn-ghost"
+style=3D"color:var(--danger);text-decoration:none;font-size:11px"
+onclick=3D"abandonarPedido()">
+          Cancelar y vaciar carrito        </button>      </div>    </div>
+  </div></div>
+
+------------------------------
+
+*=C2=A1Listo!*
+
+Sigue los 7 pasos en orden. Despu=C3=A9s de aplicar todos los cambios, guar=
+da el
+archivo y prueba agregando productos y dando clic en =E2=80=9CContinuar con=
+ el
+pedido=E2=80=9D sin estar registrado.
+
+--000000000000d6d7f8064f6bf7d1
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><p dir=3D"auto" style=3D"white-space:pre-wrap">=E2=9C=85 <=
+strong>Aqu=C3=AD tienes el documento completo</strong>, listo para copiar y=
+ pegar.
+Todo est=C3=A1 organizado, claro y en un solo bloque.</p>
+<hr>
+<p dir=3D"auto" style=3D"white-space:pre-wrap"><strong>DOCUMENTO: PROTECCI=
+=C3=93N AL DUE=C3=91O DE LA TIENDA</strong>
+<strong>Objetivo:</strong> Proteger el n=C3=BAmero de WhatsApp del due=C3=
+=B1o contra extorsi=C3=B3n y contacto directo no deseado.</p>
+<h3 dir=3D"auto">MOTIVO DE LOS CAMBIOS</h3>
+<p dir=3D"auto" style=3D"white-space:pre-wrap">En M=C3=A9xico es com=C3=BAn=
+ recibir mensajes de extorsi=C3=B3n o spam cuando el n=C3=BAmero de WhatsAp=
+p est=C3=A1 visible p=C3=BAblicamente.
+Con estos cambios se logra lo siguiente:</p>
+<ul dir=3D"auto">
+<li>El n=C3=BAmero de WhatsApp <strong>solo ser=C3=A1 visible</strong> para=
+ usuarios que tengan una cuenta registrada.</li>
+<li>Cualquier usuario (incluso sin cuenta) podr=C3=A1 agregar productos al =
+carrito.</li>
+<li>Al intentar confirmar un pedido sin estar registrado, aparecer=C3=A1 un=
+ modal controlado con opciones seguras.</li>
+<li>Opci=C3=B3n =E2=80=9CSolo dejar mi tel=C3=A9fono=E2=80=9D enviar=C3=A1 =
+el resumen del pedido por WhatsApp <strong>sin mostrar el n=C3=BAmero</stro=
+ng> al cliente.</li>
+<li>Se elimina la opci=C3=B3n f=C3=A1cil de =E2=80=9Ccontinuar como invitad=
+o=E2=80=9D para reducir pedidos falsos o de riesgo.</li>
+<li>Si el usuario decide cancelar, el carrito se vac=C3=ADa autom=C3=A1tica=
+mente.</li>
+</ul>
+<p dir=3D"auto" style=3D"white-space:pre-wrap">Esto reduce significativamen=
+te el riesgo de exposici=C3=B3n del n=C3=BAmero personal del due=C3=B1o.</p=
+>
+<hr>
+<h3 dir=3D"auto">PASO A PASO - MODIFICACIONES (Copy &amp; Paste)</h3>
+<h4 dir=3D"auto">PASO 1: Agregar la funci=C3=B3n de protecci=C3=B3n (Recome=
+ndado al final del &lt;script&gt;)</h4>
+<p dir=3D"auto" style=3D"white-space:pre-wrap">Busca la =C3=BAltima parte d=
+el c=C3=B3digo antes de &lt;/script&gt; (despu=C3=A9s de la =C3=BAltima fun=
+ci=C3=B3n) y <strong>pega esto</strong> justo antes del cierre &lt;/script&=
+gt;:</p>
+<div dir=3D"auto"><div><div><div>JavaScript</div><div><div><div style=3D"op=
+acity:1"></div></div></div><div style=3D"border-radius:0px 0px 12px 12px;bo=
+rder-top-color:currentcolor;border-top-style:none;border-top-width:medium;p=
+adding:0px 16px 16px;margin-top:0px;font-size:0.9em;font-family:var(--font-=
+ibm-plex-mono);line-height:1.5em;color:var(--fg-primary);overflow:auto"><pr=
+e tabindex=3D"0" style=3D"background-color:rgb(34,34,34);color:rgb(230,230,=
+230)"><code><span style=3D"color:rgb(106,153,85)">// =3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D PROTECCI=C3=93N AL DUE=C3=91O=
+ DE LA TIENDA =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D</span>
+<span style=3D"color:rgb(106,153,85)">// Oculta WhatsApp para usuarios no r=
+egistrados</span>
+<span style=3D"color:rgb(86,156,214)">function</span><span style=3D"color:r=
+gb(220,220,170)"> actualizarVisibilidadWA</span>() {
+<span style=3D"color:rgb(86,156,214)">  var</span><span style=3D"color:rgb(=
+156,220,254)"> debeMostrarWA</span><span style=3D"color:rgb(212,212,212)"> =
+=3D</span><span style=3D"color:rgb(212,212,212)"> !!</span><span style=3D"c=
+olor:rgb(156,220,254)">customer</span>;   <span style=3D"color:rgb(106,153,=
+85)">// Solo mostrar si el usuario est=C3=A1 logueado</span>
+
+<span style=3D"color:rgb(106,153,85)">  // Bot=C3=B3n WhatsApp en Hero</spa=
+n>
+<span style=3D"color:rgb(86,156,214)">  var</span><span style=3D"color:rgb(=
+156,220,254)"> heroWA</span><span style=3D"color:rgb(212,212,212)"> =3D</sp=
+an><span style=3D"color:rgb(156,220,254)"> document</span>.<span style=3D"c=
+olor:rgb(220,220,170)">getElementById</span>(<span style=3D"color:rgb(206,1=
+45,120)">&#39;hero-wa-btn&#39;</span>);
+<span style=3D"color:rgb(197,134,192)">  if</span> (<span style=3D"color:rg=
+b(156,220,254)">heroWA</span>) <span style=3D"color:rgb(156,220,254)">heroW=
+A</span>.<span style=3D"color:rgb(156,220,254)">style</span>.<span style=3D=
+"color:rgb(156,220,254)">display</span><span style=3D"color:rgb(212,212,212=
+)"> =3D</span><span style=3D"color:rgb(156,220,254)"> debeMostrarWA</span><=
+span style=3D"color:rgb(212,212,212)"> ?</span><span style=3D"color:rgb(206=
+,145,120)"> &#39;&#39;</span><span style=3D"color:rgb(212,212,212)"> :</spa=
+n><span style=3D"color:rgb(206,145,120)"> &#39;none&#39;</span>;
+
+<span style=3D"color:rgb(106,153,85)">  // Bot=C3=B3n WhatsApp flotante (FA=
+B)</span>
+<span style=3D"color:rgb(86,156,214)">  var</span><span style=3D"color:rgb(=
+156,220,254)"> fabWA</span><span style=3D"color:rgb(212,212,212)"> =3D</spa=
+n><span style=3D"color:rgb(156,220,254)"> document</span>.<span style=3D"co=
+lor:rgb(220,220,170)">getElementById</span>(<span style=3D"color:rgb(206,14=
+5,120)">&#39;fab-wa-btn&#39;</span>);
+<span style=3D"color:rgb(197,134,192)">  if</span> (<span style=3D"color:rg=
+b(156,220,254)">fabWA</span>) <span style=3D"color:rgb(156,220,254)">fabWA<=
+/span>.<span style=3D"color:rgb(156,220,254)">style</span>.<span style=3D"c=
+olor:rgb(156,220,254)">display</span><span style=3D"color:rgb(212,212,212)"=
+> =3D</span><span style=3D"color:rgb(156,220,254)"> debeMostrarWA</span><sp=
+an style=3D"color:rgb(212,212,212)"> ?</span><span style=3D"color:rgb(206,1=
+45,120)"> &#39;flex&#39;</span><span style=3D"color:rgb(212,212,212)"> :</s=
+pan><span style=3D"color:rgb(206,145,120)"> &#39;none&#39;</span>;
+
+<span style=3D"color:rgb(106,153,85)">  // Barra inferior de redes (si exis=
+te)</span>
+<span style=3D"color:rgb(86,156,214)">  var</span><span style=3D"color:rgb(=
+156,220,254)"> bottomBar</span><span style=3D"color:rgb(212,212,212)"> =3D<=
+/span><span style=3D"color:rgb(156,220,254)"> document</span>.<span style=
+=3D"color:rgb(220,220,170)">getElementById</span>(<span style=3D"color:rgb(=
+206,145,120)">&#39;bottom-bar&#39;</span>);
+<span style=3D"color:rgb(197,134,192)">  if</span> (<span style=3D"color:rg=
+b(156,220,254)">bottomBar</span>) <span style=3D"color:rgb(156,220,254)">bo=
+ttomBar</span>.<span style=3D"color:rgb(156,220,254)">style</span>.<span st=
+yle=3D"color:rgb(156,220,254)">display</span><span style=3D"color:rgb(212,2=
+12,212)"> =3D</span><span style=3D"color:rgb(156,220,254)"> debeMostrarWA</=
+span><span style=3D"color:rgb(212,212,212)"> ?</span><span style=3D"color:r=
+gb(206,145,120)"> &#39;flex&#39;</span><span style=3D"color:rgb(212,212,212=
+)"> :</span><span style=3D"color:rgb(206,145,120)"> &#39;none&#39;</span>;
+}</code></pre></div><div></div></div><div></div></div></div>
+<h4 dir=3D"auto">PASO 2: Modificar la funci=C3=B3n updateNav()</h4>
+<p dir=3D"auto" style=3D"white-space:pre-wrap">Busca esta funci=C3=B3n:</p>
+<div dir=3D"auto"><div><div><div>JavaScript</div><div><div><div style=3D"op=
+acity:1"></div></div></div><div style=3D"border-radius:0px 0px 12px 12px;bo=
+rder-top-color:currentcolor;border-top-style:none;border-top-width:medium;p=
+adding:0px 16px 16px;margin-top:0px;font-size:0.9em;font-family:var(--font-=
+ibm-plex-mono);line-height:1.5em;color:var(--fg-primary);overflow:auto"><pr=
+e tabindex=3D"0" style=3D"background-color:rgb(34,34,34);color:rgb(230,230,=
+230)"><code><span style=3D"color:rgb(86,156,214)">function</span><span styl=
+e=3D"color:rgb(220,220,170)"> updateNav</span>() {</code></pre></div><div><=
+/div></div><div></div></div></div>
+<p dir=3D"auto" style=3D"white-space:pre-wrap">Al final de esta funci=C3=B3=
+n (justo antes del =C3=BAltimo } ), agrega esta l=C3=ADnea:</p>
+<div dir=3D"auto"><div><div><div>JavaScript</div><div><div><div style=3D"op=
+acity:1"></div></div></div><div style=3D"border-radius:0px 0px 12px 12px;bo=
+rder-top-color:currentcolor;border-top-style:none;border-top-width:medium;p=
+adding:0px 16px 16px;margin-top:0px;font-size:0.9em;font-family:var(--font-=
+ibm-plex-mono);line-height:1.5em;color:var(--fg-primary);overflow:auto"><pr=
+e tabindex=3D"0" style=3D"background-color:rgb(34,34,34);color:rgb(230,230,=
+230)"><code><span style=3D"color:rgb(220,220,170)">actualizarVisibilidadWA<=
+/span>();</code></pre></div><div></div></div><div></div></div></div>
+<p dir=3D"auto" style=3D"white-space:pre-wrap">Quedar=C3=ADa as=C3=AD al fi=
+nal de la funci=C3=B3n:</p>
+<div dir=3D"auto"><div><div><div>JavaScript</div><div><div><div style=3D"op=
+acity:1"></div></div></div><div style=3D"border-radius:0px 0px 12px 12px;bo=
+rder-top-color:currentcolor;border-top-style:none;border-top-width:medium;p=
+adding:0px 16px 16px;margin-top:0px;font-size:0.9em;font-family:var(--font-=
+ibm-plex-mono);line-height:1.5em;color:var(--fg-primary);overflow:auto"><pr=
+e tabindex=3D"0" style=3D"background-color:rgb(34,34,34);color:rgb(230,230,=
+230)"><code>}
+<span style=3D"color:rgb(220,220,170)">  actualizarVisibilidadWA</span>(); =
+  <span style=3D"color:rgb(106,153,85)">// =E2=86=90 Nueva l=C3=ADnea agreg=
+ada</span>
+}</code></pre></div><div></div></div><div></div></div></div>
+<h4 dir=3D"auto">PASO 3: Llamar a la funci=C3=B3n de protecci=C3=B3n al car=
+gar la p=C3=A1gina</h4>
+<p dir=3D"auto" style=3D"white-space:pre-wrap">Busca dentro de window.addEv=
+entListener(&#39;load&#39;, async function() {
+Despu=C3=A9s de la l=C3=ADnea updateNav(); agrega:</p>
+<div dir=3D"auto"><div><div><div>JavaScript</div><div><div><div style=3D"op=
+acity:1"></div></div></div><div style=3D"border-radius:0px 0px 12px 12px;bo=
+rder-top-color:currentcolor;border-top-style:none;border-top-width:medium;p=
+adding:0px 16px 16px;margin-top:0px;font-size:0.9em;font-family:var(--font-=
+ibm-plex-mono);line-height:1.5em;color:var(--fg-primary);overflow:auto"><pr=
+e tabindex=3D"0" style=3D"background-color:rgb(34,34,34);color:rgb(230,230,=
+230)"><code><span style=3D"color:rgb(220,220,170)">actualizarVisibilidadWA<=
+/span>();</code></pre></div><div></div></div><div></div></div></div>
+<p dir=3D"auto" style=3D"white-space:pre-wrap">Ejemplo de c=C3=B3mo debe qu=
+edar:</p>
+<div dir=3D"auto"><div><div><div>JavaScript</div><div><div><div style=3D"op=
+acity:1"></div></div></div><div style=3D"border-radius:0px 0px 12px 12px;bo=
+rder-top-color:currentcolor;border-top-style:none;border-top-width:medium;p=
+adding:0px 16px 16px;margin-top:0px;font-size:0.9em;font-family:var(--font-=
+ibm-plex-mono);line-height:1.5em;color:var(--fg-primary);overflow:auto"><pr=
+e tabindex=3D"0" style=3D"background-color:rgb(34,34,34);color:rgb(230,230,=
+230)"><code><span style=3D"color:rgb(220,220,170)">updateNav</span>();
+<span style=3D"color:rgb(220,220,170)">    actualizarVisibilidadWA</span>()=
+;   <span style=3D"color:rgb(106,153,85)">// =E2=86=90 Nueva l=C3=ADnea</sp=
+an>
+<span style=3D"color:rgb(220,220,170)">    updateBanner</span>();
+<span style=3D"color:rgb(220,220,170)">    initMap</span>();
+<span style=3D"color:rgb(220,220,170)">    showV</span>(<span style=3D"colo=
+r:rgb(206,145,120)">&#39;catalog&#39;</span>);</code></pre></div><div></div=
+></div><div></div></div></div>
+<h4 dir=3D"auto">PASO 4: Reemplazar la funci=C3=B3n showCheckout() + agrega=
+r nuevas funciones</h4>
+<p dir=3D"auto" style=3D"white-space:pre-wrap">Busca la funci=C3=B3n comple=
+ta:</p>
+<div dir=3D"auto"><div><div><div>JavaScript</div><div><div><div style=3D"op=
+acity:1"></div></div></div><div style=3D"border-radius:0px 0px 12px 12px;bo=
+rder-top-color:currentcolor;border-top-style:none;border-top-width:medium;p=
+adding:0px 16px 16px;margin-top:0px;font-size:0.9em;font-family:var(--font-=
+ibm-plex-mono);line-height:1.5em;color:var(--fg-primary);overflow:auto"><pr=
+e tabindex=3D"0" style=3D"background-color:rgb(34,34,34);color:rgb(230,230,=
+230)"><code><span style=3D"color:rgb(86,156,214)">function</span><span styl=
+e=3D"color:rgb(220,220,170)"> showCheckout</span>() {</code></pre></div><di=
+v></div></div><div></div></div></div>
+<p dir=3D"auto" style=3D"white-space:pre-wrap"><strong>Borra toda la funci=
+=C3=B3n</strong> y reempl=C3=A1zala por este bloque completo:</p>
+<div dir=3D"auto"><div><div><div>JavaScript</div><div><div><div style=3D"op=
+acity:1"></div></div></div><div style=3D"border-radius:0px 0px 12px 12px;bo=
+rder-top-color:currentcolor;border-top-style:none;border-top-width:medium;p=
+adding:0px 16px 16px;margin-top:0px;font-size:0.9em;font-family:var(--font-=
+ibm-plex-mono);line-height:1.5em;color:var(--fg-primary);overflow:auto"><pr=
+e tabindex=3D"0" style=3D"background-color:rgb(34,34,34);color:rgb(230,230,=
+230)"><code><span style=3D"color:rgb(86,156,214)">function</span><span styl=
+e=3D"color:rgb(220,220,170)"> showCheckout</span>() {
+<span style=3D"color:rgb(197,134,192)">  if</span> (<span style=3D"color:rg=
+b(212,212,212)">!</span><span style=3D"color:rgb(156,220,254)">cart</span>.=
+<span style=3D"color:rgb(156,220,254)">length</span>) { <span style=3D"colo=
+r:rgb(220,220,170)">toast</span>(<span style=3D"color:rgb(206,145,120)">&#3=
+9;Agrega productos primero&#39;</span>); <span style=3D"color:rgb(197,134,1=
+92)">return</span>; }
+<span style=3D"color:rgb(197,134,192)">  if</span> (<span style=3D"color:rg=
+b(156,220,254)">customer</span>) { <span style=3D"color:rgb(220,220,170)">_=
+doShowCheckout</span>(); <span style=3D"color:rgb(197,134,192)">return</spa=
+n>; }
+ =20
+<span style=3D"color:rgb(106,153,85)">  // Sin sesi=C3=B3n =E2=86=92 mostra=
+r modal de protecci=C3=B3n</span>
+<span style=3D"color:rgb(86,156,214)">  var</span><span style=3D"color:rgb(=
+156,220,254)"> el</span><span style=3D"color:rgb(212,212,212)"> =3D</span><=
+span style=3D"color:rgb(156,220,254)"> document</span>.<span style=3D"color=
+:rgb(220,220,170)">getElementById</span>(<span style=3D"color:rgb(206,145,1=
+20)">&#39;csm-telefono&#39;</span>);
+<span style=3D"color:rgb(197,134,192)">  if</span> (<span style=3D"color:rg=
+b(156,220,254)">el</span>) <span style=3D"color:rgb(156,220,254)">el</span>=
+.<span style=3D"color:rgb(156,220,254)">value</span><span style=3D"color:rg=
+b(212,212,212)"> =3D</span><span style=3D"color:rgb(206,145,120)"> &#39;&#3=
+9;</span>;
+<span style=3D"color:rgb(86,156,214)">  var</span><span style=3D"color:rgb(=
+156,220,254)"> err</span><span style=3D"color:rgb(212,212,212)"> =3D</span>=
+<span style=3D"color:rgb(156,220,254)"> document</span>.<span style=3D"colo=
+r:rgb(220,220,170)">getElementById</span>(<span style=3D"color:rgb(206,145,=
+120)">&#39;csm-err&#39;</span>);
+<span style=3D"color:rgb(197,134,192)">  if</span> (<span style=3D"color:rg=
+b(156,220,254)">err</span>) <span style=3D"color:rgb(156,220,254)">err</spa=
+n>.<span style=3D"color:rgb(156,220,254)">style</span>.<span style=3D"color=
+:rgb(156,220,254)">display</span><span style=3D"color:rgb(212,212,212)"> =
+=3D</span><span style=3D"color:rgb(206,145,120)"> &#39;none&#39;</span>;
+<span style=3D"color:rgb(156,220,254)">  document</span>.<span style=3D"col=
+or:rgb(220,220,170)">getElementById</span>(<span style=3D"color:rgb(206,145=
+,120)">&#39;csm-phone-block&#39;</span>).<span style=3D"color:rgb(156,220,2=
+54)">style</span>.<span style=3D"color:rgb(156,220,254)">display</span><spa=
+n style=3D"color:rgb(212,212,212)"> =3D</span><span style=3D"color:rgb(206,=
+145,120)"> &#39;none&#39;</span>;
+<span style=3D"color:rgb(156,220,254)">  document</span>.<span style=3D"col=
+or:rgb(220,220,170)">getElementById</span>(<span style=3D"color:rgb(206,145=
+,120)">&#39;csm-main-block&#39;</span>).<span style=3D"color:rgb(156,220,25=
+4)">style</span>.<span style=3D"color:rgb(156,220,254)">display</span><span=
+ style=3D"color:rgb(212,212,212)"> =3D</span><span style=3D"color:rgb(206,1=
+45,120)"> &#39;block&#39;</span>;
+<span style=3D"color:rgb(156,220,254)">  document</span>.<span style=3D"col=
+or:rgb(220,220,170)">getElementById</span>(<span style=3D"color:rgb(206,145=
+,120)">&#39;csm-bg&#39;</span>).<span style=3D"color:rgb(156,220,254)">clas=
+sList</span>.<span style=3D"color:rgb(220,220,170)">add</span>(<span style=
+=3D"color:rgb(206,145,120)">&#39;on&#39;</span>);
+}
+
+<span style=3D"color:rgb(86,156,214)">function</span><span style=3D"color:r=
+gb(220,220,170)"> closeSuggestModal</span>() {
+<span style=3D"color:rgb(156,220,254)">  document</span>.<span style=3D"col=
+or:rgb(220,220,170)">getElementById</span>(<span style=3D"color:rgb(206,145=
+,120)">&#39;csm-bg&#39;</span>).<span style=3D"color:rgb(156,220,254)">clas=
+sList</span>.<span style=3D"color:rgb(220,220,170)">remove</span>(<span sty=
+le=3D"color:rgb(206,145,120)">&#39;on&#39;</span>);
+}
+
+<span style=3D"color:rgb(86,156,214)">function</span><span style=3D"color:r=
+gb(220,220,170)"> abandonarPedido</span>() {
+<span style=3D"color:rgb(156,220,254)">  cart</span><span style=3D"color:rg=
+b(212,212,212)"> =3D</span> []; <span style=3D"color:rgb(220,220,170)">save=
+</span>(); <span style=3D"color:rgb(220,220,170)">renderGrid</span>(); <spa=
+n style=3D"color:rgb(220,220,170)">updateNav</span>();
+<span style=3D"color:rgb(220,220,170)">  closeSuggestModal</span>(); <span =
+style=3D"color:rgb(220,220,170)">closeCart</span>();
+<span style=3D"color:rgb(220,220,170)">  toast</span>(<span style=3D"color:=
+rgb(206,145,120)">&#39;Carrito vaciado&#39;</span>);
+<span style=3D"color:rgb(156,220,254)">  window</span>.<span style=3D"color=
+:rgb(220,220,170)">scrollTo</span>({ <span style=3D"color:rgb(156,220,254)"=
+>top:</span><span style=3D"color:rgb(181,206,168)"> 0</span>, <span style=
+=3D"color:rgb(156,220,254)">behavior:</span><span style=3D"color:rgb(206,14=
+5,120)"> &#39;smooth&#39;</span> });
+}
+
+<span style=3D"color:rgb(86,156,214)">function</span><span style=3D"color:r=
+gb(220,220,170)"> mostrarFormTelefono</span>() {
+<span style=3D"color:rgb(156,220,254)">  document</span>.<span style=3D"col=
+or:rgb(220,220,170)">getElementById</span>(<span style=3D"color:rgb(206,145=
+,120)">&#39;csm-main-block&#39;</span>).<span style=3D"color:rgb(156,220,25=
+4)">style</span>.<span style=3D"color:rgb(156,220,254)">display</span><span=
+ style=3D"color:rgb(212,212,212)"> =3D</span><span style=3D"color:rgb(206,1=
+45,120)"> &#39;none&#39;</span>;
+<span style=3D"color:rgb(156,220,254)">  document</span>.<span style=3D"col=
+or:rgb(220,220,170)">getElementById</span>(<span style=3D"color:rgb(206,145=
+,120)">&#39;csm-phone-block&#39;</span>).<span style=3D"color:rgb(156,220,2=
+54)">style</span>.<span style=3D"color:rgb(156,220,254)">display</span><spa=
+n style=3D"color:rgb(212,212,212)"> =3D</span><span style=3D"color:rgb(206,=
+145,120)"> &#39;block&#39;</span>;
+}
+
+<span style=3D"color:rgb(86,156,214)">function</span><span style=3D"color:r=
+gb(220,220,170)"> confirmarConTelefono</span>() {
+<span style=3D"color:rgb(86,156,214)">  var</span><span style=3D"color:rgb(=
+156,220,254)"> tel</span><span style=3D"color:rgb(212,212,212)"> =3D</span>=
+ (<span style=3D"color:rgb(156,220,254)">document</span>.<span style=3D"col=
+or:rgb(220,220,170)">getElementById</span>(<span style=3D"color:rgb(206,145=
+,120)">&#39;csm-telefono&#39;</span>).<span style=3D"color:rgb(156,220,254)=
+">value</span><span style=3D"color:rgb(212,212,212)"> ||</span><span style=
+=3D"color:rgb(206,145,120)"> &#39;&#39;</span>).<span style=3D"color:rgb(22=
+0,220,170)">trim</span>();
+<span style=3D"color:rgb(86,156,214)">  var</span><span style=3D"color:rgb(=
+156,220,254)"> err</span><span style=3D"color:rgb(212,212,212)"> =3D</span>=
+<span style=3D"color:rgb(156,220,254)"> document</span>.<span style=3D"colo=
+r:rgb(220,220,170)">getElementById</span>(<span style=3D"color:rgb(206,145,=
+120)">&#39;csm-err&#39;</span>);
+<span style=3D"color:rgb(197,134,192)">  if</span> (<span style=3D"color:rg=
+b(212,212,212)">!</span><span style=3D"color:rgb(156,220,254)">tel</span><s=
+pan style=3D"color:rgb(212,212,212)"> ||</span><span style=3D"color:rgb(156=
+,220,254)"> tel</span>.<span style=3D"color:rgb(220,220,170)">replace</span=
+>(<span style=3D"color:rgb(209,105,105)">/\D/</span><span style=3D"color:rg=
+b(86,156,214)">g</span>,<span style=3D"color:rgb(206,145,120)">&#39;&#39;</=
+span>).<span style=3D"color:rgb(156,220,254)">length</span><span style=3D"c=
+olor:rgb(212,212,212)"> &lt;</span><span style=3D"color:rgb(181,206,168)"> =
+8</span>) {
+<span style=3D"color:rgb(156,220,254)">    err</span>.<span style=3D"color:=
+rgb(156,220,254)">style</span>.<span style=3D"color:rgb(156,220,254)">displ=
+ay</span><span style=3D"color:rgb(212,212,212)"> =3D</span><span style=3D"c=
+olor:rgb(206,145,120)"> &#39;block&#39;</span>;
+<span style=3D"color:rgb(156,220,254)">    err</span>.<span style=3D"color:=
+rgb(156,220,254)">textContent</span><span style=3D"color:rgb(212,212,212)">=
+ =3D</span><span style=3D"color:rgb(206,145,120)"> &#39;Ingresa un n=C3=BAm=
+ero v=C3=A1lido para poder contactarte&#39;</span>;
+<span style=3D"color:rgb(197,134,192)">    return</span>;
+  }
+<span style=3D"color:rgb(156,220,254)">  err</span>.<span style=3D"color:rg=
+b(156,220,254)">style</span>.<span style=3D"color:rgb(156,220,254)">display=
+</span><span style=3D"color:rgb(212,212,212)"> =3D</span><span style=3D"col=
+or:rgb(206,145,120)"> &#39;none&#39;</span>;
+<span style=3D"color:rgb(86,156,214)">  var</span><span style=3D"color:rgb(=
+156,220,254)"> phone</span><span style=3D"color:rgb(212,212,212)"> =3D</spa=
+n><span style=3D"color:rgb(156,220,254)"> storeWA</span>.<span style=3D"col=
+or:rgb(220,220,170)">replace</span>(<span style=3D"color:rgb(209,105,105)">=
+/\D/</span><span style=3D"color:rgb(86,156,214)">g</span>,<span style=3D"co=
+lor:rgb(206,145,120)">&#39;&#39;</span>);
+<span style=3D"color:rgb(197,134,192)">  if</span> (<span style=3D"color:rg=
+b(212,212,212)">!</span><span style=3D"color:rgb(156,220,254)">phone</span>=
+) { <span style=3D"color:rgb(220,220,170)">toast</span>(<span style=3D"colo=
+r:rgb(206,145,120)">&#39;Esta tienda no tiene WhatsApp configurado&#39;</sp=
+an>); <span style=3D"color:rgb(197,134,192)">return</span>; }
+ =20
+<span style=3D"color:rgb(86,156,214)">  var</span><span style=3D"color:rgb(=
+156,220,254)"> msg</span><span style=3D"color:rgb(212,212,212)"> =3D</span>=
+<span style=3D"color:rgb(206,145,120)"> &#39;Hola! Quiero hacer un pedido e=
+n *&#39;</span><span style=3D"color:rgb(212,212,212)"> +</span><span style=
+=3D"color:rgb(156,220,254)"> storeName</span><span style=3D"color:rgb(212,2=
+12,212)"> +</span><span style=3D"color:rgb(206,145,120)"> &#39;*:</span><sp=
+an style=3D"color:rgb(215,186,125)">\n\n</span><span style=3D"color:rgb(206=
+,145,120)">&#39;</span>;
+<span style=3D"color:rgb(156,220,254)">  cart</span>.<span style=3D"color:r=
+gb(220,220,170)">forEach</span>(<span style=3D"color:rgb(86,156,214)">funct=
+ion</span>(<span style=3D"color:rgb(156,220,254)">c</span>, <span style=3D"=
+color:rgb(156,220,254)">i</span>) {
+<span style=3D"color:rgb(156,220,254)">    msg</span><span style=3D"color:r=
+gb(212,212,212)"> +=3D</span> (<span style=3D"color:rgb(156,220,254)">i</sp=
+an><span style=3D"color:rgb(212,212,212)">+</span><span style=3D"color:rgb(=
+181,206,168)">1</span>) <span style=3D"color:rgb(212,212,212)">+</span><spa=
+n style=3D"color:rgb(206,145,120)"> &#39;. &#39;</span><span style=3D"color=
+:rgb(212,212,212)"> +</span><span style=3D"color:rgb(156,220,254)"> c</span=
+>.<span style=3D"color:rgb(156,220,254)">name</span><span style=3D"color:rg=
+b(212,212,212)"> +</span><span style=3D"color:rgb(206,145,120)"> &#39; x&#3=
+9;</span><span style=3D"color:rgb(212,212,212)"> +</span><span style=3D"col=
+or:rgb(156,220,254)"> c</span>.<span style=3D"color:rgb(156,220,254)">qty</=
+span><span style=3D"color:rgb(212,212,212)"> +</span><span style=3D"color:r=
+gb(206,145,120)"> &#39; =E2=80=94 &#39;</span><span style=3D"color:rgb(212,=
+212,212)"> +</span><span style=3D"color:rgb(220,220,170)"> fmt</span>(<span=
+ style=3D"color:rgb(156,220,254)">c</span>.<span style=3D"color:rgb(156,220=
+,254)">price</span><span style=3D"color:rgb(212,212,212)"> *</span><span st=
+yle=3D"color:rgb(156,220,254)"> c</span>.<span style=3D"color:rgb(156,220,2=
+54)">qty</span>) <span style=3D"color:rgb(212,212,212)">+</span><span style=
+=3D"color:rgb(206,145,120)"> &#39;</span><span style=3D"color:rgb(215,186,1=
+25)">\n</span><span style=3D"color:rgb(206,145,120)">&#39;</span>;
+  });
+<span style=3D"color:rgb(156,220,254)">  msg</span><span style=3D"color:rgb=
+(212,212,212)"> +=3D</span><span style=3D"color:rgb(206,145,120)"> &#39;</s=
+pan><span style=3D"color:rgb(215,186,125)">\n</span><span style=3D"color:rg=
+b(206,145,120)">Total estimado: *&#39;</span><span style=3D"color:rgb(212,2=
+12,212)"> +</span><span style=3D"color:rgb(220,220,170)"> fmt</span>(<span =
+style=3D"color:rgb(220,220,170)">cartTotal</span>()) <span style=3D"color:r=
+gb(212,212,212)">+</span><span style=3D"color:rgb(206,145,120)"> &#39;*&#39=
+;</span>;
+<span style=3D"color:rgb(156,220,254)">  msg</span><span style=3D"color:rgb=
+(212,212,212)"> +=3D</span><span style=3D"color:rgb(206,145,120)"> &#39;</s=
+pan><span style=3D"color:rgb(215,186,125)">\n\n</span><span style=3D"color:=
+rgb(206,145,120)">Mi n=C3=BAmero de contacto: *&#39;</span><span style=3D"c=
+olor:rgb(212,212,212)"> +</span><span style=3D"color:rgb(156,220,254)"> tel=
+</span><span style=3D"color:rgb(212,212,212)"> +</span><span style=3D"color=
+:rgb(206,145,120)"> &#39;*&#39;</span>;
+ =20
+<span style=3D"color:rgb(156,220,254)">  window</span>.<span style=3D"color=
+:rgb(220,220,170)">open</span>(<span style=3D"color:rgb(206,145,120)">&#39;=
+<a href=3D"https://wa.me/">https://wa.me/</a>&#39;</span><span style=3D"col=
+or:rgb(212,212,212)"> +</span><span style=3D"color:rgb(156,220,254)"> phone=
+</span><span style=3D"color:rgb(212,212,212)"> +</span><span style=3D"color=
+:rgb(206,145,120)"> &#39;?text=3D&#39;</span><span style=3D"color:rgb(212,2=
+12,212)"> +</span><span style=3D"color:rgb(220,220,170)"> encodeURIComponen=
+t</span>(<span style=3D"color:rgb(156,220,254)">msg</span>), <span style=3D=
+"color:rgb(206,145,120)">&#39;_blank&#39;</span>);
+ =20
+<span style=3D"color:rgb(156,220,254)">  cart</span><span style=3D"color:rg=
+b(212,212,212)"> =3D</span> []; <span style=3D"color:rgb(220,220,170)">save=
+</span>(); <span style=3D"color:rgb(220,220,170)">renderGrid</span>(); <spa=
+n style=3D"color:rgb(220,220,170)">updateNav</span>();
+<span style=3D"color:rgb(220,220,170)">  closeSuggestModal</span>(); <span =
+style=3D"color:rgb(220,220,170)">closeCart</span>();
+<span style=3D"color:rgb(220,220,170)">  toast</span>(<span style=3D"color:=
+rgb(206,145,120)">&#39;Pedido enviado =E2=80=94 te contactaremos pronto&#39=
+;</span>);
+}</code></pre></div><div></div></div><div></div></div></div>
+<h4 dir=3D"auto">PASO 5: Reemplazar la funci=C3=B3n addToCart()</h4>
+<p dir=3D"auto" style=3D"white-space:pre-wrap">Busca:</p>
+<div dir=3D"auto"><div><div><div>JavaScript</div><div><div><div style=3D"op=
+acity:1"></div></div></div><div style=3D"border-radius:0px 0px 12px 12px;bo=
+rder-top-color:currentcolor;border-top-style:none;border-top-width:medium;p=
+adding:0px 16px 16px;margin-top:0px;font-size:0.9em;font-family:var(--font-=
+ibm-plex-mono);line-height:1.5em;color:var(--fg-primary);overflow:auto"><pr=
+e tabindex=3D"0" style=3D"background-color:rgb(34,34,34);color:rgb(230,230,=
+230)"><code><span style=3D"color:rgb(86,156,214)">function</span><span styl=
+e=3D"color:rgb(220,220,170)"> addToCart</span>(<span style=3D"color:rgb(156=
+,220,254)">pid</span>) {</code></pre></div><div></div></div><div></div></di=
+v></div>
+<p dir=3D"auto" style=3D"white-space:pre-wrap">Reemplaza toda la funci=C3=
+=B3n por esta versi=C3=B3n:</p>
+<div dir=3D"auto"><div><div><div>JavaScript</div><div><div><div style=3D"op=
+acity:1"></div></div></div><div style=3D"border-radius:0px 0px 12px 12px;bo=
+rder-top-color:currentcolor;border-top-style:none;border-top-width:medium;p=
+adding:0px 16px 16px;margin-top:0px;font-size:0.9em;font-family:var(--font-=
+ibm-plex-mono);line-height:1.5em;color:var(--fg-primary);overflow:auto"><pr=
+e tabindex=3D"0" style=3D"background-color:rgb(34,34,34);color:rgb(230,230,=
+230)"><code><span style=3D"color:rgb(86,156,214)">function</span><span styl=
+e=3D"color:rgb(220,220,170)"> addToCart</span>(<span style=3D"color:rgb(156=
+,220,254)">pid</span>) {
+<span style=3D"color:rgb(86,156,214)">  var</span><span style=3D"color:rgb(=
+156,220,254)"> p</span><span style=3D"color:rgb(212,212,212)"> =3D</span><s=
+pan style=3D"color:rgb(156,220,254)"> products</span>.<span style=3D"color:=
+rgb(220,220,170)">find</span>(<span style=3D"color:rgb(86,156,214)">functio=
+n</span>(<span style=3D"color:rgb(156,220,254)">x</span>) { <span style=3D"=
+color:rgb(197,134,192)">return</span><span style=3D"color:rgb(156,220,254)"=
+> x</span>.<span style=3D"color:rgb(156,220,254)">productId</span><span sty=
+le=3D"color:rgb(212,212,212)"> =3D=3D=3D</span><span style=3D"color:rgb(156=
+,220,254)"> pid</span>; }); <span style=3D"color:rgb(197,134,192)">if</span=
+> (<span style=3D"color:rgb(212,212,212)">!</span><span style=3D"color:rgb(=
+156,220,254)">p</span>) <span style=3D"color:rgb(197,134,192)">return</span=
+>;
+<span style=3D"color:rgb(86,156,214)">  var</span><span style=3D"color:rgb(=
+156,220,254)"> item</span><span style=3D"color:rgb(212,212,212)"> =3D</span=
+><span style=3D"color:rgb(156,220,254)"> cart</span>.<span style=3D"color:r=
+gb(220,220,170)">find</span>(<span style=3D"color:rgb(86,156,214)">function=
+</span>(<span style=3D"color:rgb(156,220,254)">c</span>) { <span style=3D"c=
+olor:rgb(197,134,192)">return</span><span style=3D"color:rgb(156,220,254)">=
+ c</span>.<span style=3D"color:rgb(156,220,254)">productId</span><span styl=
+e=3D"color:rgb(212,212,212)"> =3D=3D=3D</span><span style=3D"color:rgb(156,=
+220,254)"> pid</span>; });
+<span style=3D"color:rgb(86,156,214)">  var</span><span style=3D"color:rgb(=
+156,220,254)"> isMayorista</span><span style=3D"color:rgb(212,212,212)"> =
+=3D</span><span style=3D"color:rgb(156,220,254)"> customer</span><span styl=
+e=3D"color:rgb(212,212,212)"> ?</span><span style=3D"color:rgb(156,220,254)=
+"> customer</span>.<span style=3D"color:rgb(156,220,254)">isMayorista</span=
+><span style=3D"color:rgb(212,212,212)"> ||</span><span style=3D"color:rgb(=
+86,156,214)"> false</span><span style=3D"color:rgb(212,212,212)"> :</span><=
+span style=3D"color:rgb(86,156,214)"> false</span>;
+<span style=3D"color:rgb(86,156,214)">  var</span><span style=3D"color:rgb(=
+156,220,254)"> price</span><span style=3D"color:rgb(212,212,212)"> =3D</spa=
+n> (<span style=3D"color:rgb(156,220,254)">isMayorista</span><span style=3D=
+"color:rgb(212,212,212)"> &amp;&amp;</span><span style=3D"color:rgb(156,220=
+,254)"> p</span>.<span style=3D"color:rgb(156,220,254)">wholesalePrice</spa=
+n><span style=3D"color:rgb(212,212,212)"> !=3D=3D</span><span style=3D"colo=
+r:rgb(86,156,214)"> undefined</span><span style=3D"color:rgb(212,212,212)">=
+ &amp;&amp;</span><span style=3D"color:rgb(156,220,254)"> p</span>.<span st=
+yle=3D"color:rgb(156,220,254)">wholesalePrice</span><span style=3D"color:rg=
+b(212,212,212)"> !=3D=3D</span><span style=3D"color:rgb(206,145,120)"> &#39=
+;&#39;</span>) <span style=3D"color:rgb(212,212,212)">?</span><span style=
+=3D"color:rgb(220,220,170)"> Number</span>(<span style=3D"color:rgb(156,220=
+,254)">p</span>.<span style=3D"color:rgb(156,220,254)">wholesalePrice</span=
+>) <span style=3D"color:rgb(212,212,212)">:</span><span style=3D"color:rgb(=
+220,220,170)"> Number</span>(<span style=3D"color:rgb(156,220,254)">p</span=
+>.<span style=3D"color:rgb(156,220,254)">price</span>);
+<span style=3D"color:rgb(86,156,214)">  var</span><span style=3D"color:rgb(=
+156,220,254)"> sinStock</span><span style=3D"color:rgb(212,212,212)"> =3D</=
+span><span style=3D"color:rgb(220,220,170)"> Number</span>(<span style=3D"c=
+olor:rgb(156,220,254)">p</span>.<span style=3D"color:rgb(156,220,254)">stoc=
+k</span><span style=3D"color:rgb(212,212,212)"> ||</span><span style=3D"col=
+or:rgb(181,206,168)"> 0</span>) <span style=3D"color:rgb(212,212,212)">&lt;=
+=3D</span><span style=3D"color:rgb(181,206,168)"> 0</span>;
+<span style=3D"color:rgb(197,134,192)">  if</span> (<span style=3D"color:rg=
+b(156,220,254)">item</span>) <span style=3D"color:rgb(156,220,254)">item</s=
+pan>.<span style=3D"color:rgb(156,220,254)">qty</span><span style=3D"color:=
+rgb(212,212,212)">++</span>;
+<span style=3D"color:rgb(197,134,192)">  else</span><span style=3D"color:rg=
+b(156,220,254)"> cart</span>.<span style=3D"color:rgb(220,220,170)">push</s=
+pan>({ <span style=3D"color:rgb(156,220,254)">productId:</span><span style=
+=3D"color:rgb(156,220,254)"> pid</span>, <span style=3D"color:rgb(156,220,2=
+54)">name:</span><span style=3D"color:rgb(156,220,254)"> p</span>.<span sty=
+le=3D"color:rgb(156,220,254)">name</span>, <span style=3D"color:rgb(156,220=
+,254)">price:</span><span style=3D"color:rgb(156,220,254)"> price</span>, <=
+span style=3D"color:rgb(156,220,254)">imageUrl:</span><span style=3D"color:=
+rgb(156,220,254)"> p</span>.<span style=3D"color:rgb(156,220,254)">imageUrl=
+</span><span style=3D"color:rgb(212,212,212)"> ||</span><span style=3D"colo=
+r:rgb(206,145,120)"> &#39;&#39;</span>, <span style=3D"color:rgb(156,220,25=
+4)">qty:</span><span style=3D"color:rgb(181,206,168)"> 1</span>, <span styl=
+e=3D"color:rgb(156,220,254)">sinStock:</span><span style=3D"color:rgb(156,2=
+20,254)"> sinStock</span> });
+<span style=3D"color:rgb(220,220,170)">  save</span>(); <span style=3D"colo=
+r:rgb(220,220,170)">renderGrid</span>(); <span style=3D"color:rgb(220,220,1=
+70)">renderCartList</span>();
+<span style=3D"color:rgb(220,220,170)">  toast</span>(<span style=3D"color:=
+rgb(156,220,254)">sinStock</span><span style=3D"color:rgb(212,212,212)"> ?<=
+/span><span style=3D"color:rgb(206,145,120)"> &#39;Solicitud registrada =E2=
+=80=94 verificaremos existencia&#39;</span><span style=3D"color:rgb(212,212=
+,212)"> :</span><span style=3D"color:rgb(206,145,120)"> &#39;&quot;&#39;</s=
+pan><span style=3D"color:rgb(212,212,212)"> +</span><span style=3D"color:rg=
+b(156,220,254)"> p</span>.<span style=3D"color:rgb(156,220,254)">name</span=
+><span style=3D"color:rgb(212,212,212)"> +</span><span style=3D"color:rgb(2=
+06,145,120)"> &#39;&quot; a=C3=B1adido al carrito&#39;</span>);
+}</code></pre></div><div></div></div><div></div></div></div>
+<h4 dir=3D"auto">PASO 6: Cambiar el bot=C3=B3n para usuarios no registrados=
+ en renderGridPage()</h4>
+<p dir=3D"auto" style=3D"white-space:pre-wrap">Dentro de la funci=C3=B3n re=
+nderGridPage(), busca este bloque:</p>
+<div dir=3D"auto"><div><div><div>JavaScript</div><div><div><div style=3D"op=
+acity:1"></div></div></div><div style=3D"border-radius:0px 0px 12px 12px;bo=
+rder-top-color:currentcolor;border-top-style:none;border-top-width:medium;p=
+adding:0px 16px 16px;margin-top:0px;font-size:0.9em;font-family:var(--font-=
+ibm-plex-mono);line-height:1.5em;color:var(--fg-primary);overflow:auto"><pr=
+e tabindex=3D"0" style=3D"background-color:rgb(34,34,34);color:rgb(230,230,=
+230)"><code>} <span style=3D"color:rgb(197,134,192)">else</span><span style=
+=3D"color:rgb(197,134,192)"> if</span> (<span style=3D"color:rgb(212,212,21=
+2)">!</span><span style=3D"color:rgb(156,220,254)">customer</span>) {
+<span style=3D"color:rgb(156,220,254)">  ctaHTML</span><span style=3D"color=
+:rgb(212,212,212)"> =3D</span><span style=3D"color:rgb(206,145,120)"> &#39;=
+&lt;button class=3D&quot;add-btn guest&quot; onclick=3D&quot;event.stopProp=
+agation();showAuth(</span><span style=3D"color:rgb(215,186,125)">\&#39;</sp=
+an><span style=3D"color:rgb(206,145,120)">register</span><span style=3D"col=
+or:rgb(215,186,125)">\&#39;</span><span style=3D"color:rgb(206,145,120)">)&=
+quot;&gt;+&lt;/button&gt;&#39;</span>;</code></pre></div><div></div></div><=
+div></div></div></div>
+<p dir=3D"auto" style=3D"white-space:pre-wrap"><strong>Reempl=C3=A1zalo</st=
+rong> por:</p>
+<div dir=3D"auto"><div><div><div>JavaScript</div><div><div><div style=3D"op=
+acity:1"></div></div></div><div style=3D"border-radius:0px 0px 12px 12px;bo=
+rder-top-color:currentcolor;border-top-style:none;border-top-width:medium;p=
+adding:0px 16px 16px;margin-top:0px;font-size:0.9em;font-family:var(--font-=
+ibm-plex-mono);line-height:1.5em;color:var(--fg-primary);overflow:auto"><pr=
+e tabindex=3D"0" style=3D"background-color:rgb(34,34,34);color:rgb(230,230,=
+230)"><code>} <span style=3D"color:rgb(197,134,192)">else</span><span style=
+=3D"color:rgb(197,134,192)"> if</span> (<span style=3D"color:rgb(212,212,21=
+2)">!</span><span style=3D"color:rgb(156,220,254)">customer</span>) {
+<span style=3D"color:rgb(86,156,214)">  var</span><span style=3D"color:rgb(=
+156,220,254)"> qty2</span><span style=3D"color:rgb(212,212,212)"> =3D</span=
+><span style=3D"color:rgb(156,220,254)"> inCartQty</span><span style=3D"col=
+or:rgb(212,212,212)"> ?</span><span style=3D"color:rgb(156,220,254)"> inCar=
+tQty</span>.<span style=3D"color:rgb(156,220,254)">qty</span><span style=3D=
+"color:rgb(212,212,212)"> :</span><span style=3D"color:rgb(181,206,168)"> 0=
+</span>;
+<span style=3D"color:rgb(156,220,254)">  ctaHTML</span><span style=3D"color=
+:rgb(212,212,212)"> =3D</span><span style=3D"color:rgb(206,145,120)"> &#39;=
+&lt;button class=3D&quot;add-btn &#39;</span><span style=3D"color:rgb(212,2=
+12,212)"> +</span> (<span style=3D"color:rgb(156,220,254)">qty2</span><span=
+ style=3D"color:rgb(212,212,212)"> &gt;</span><span style=3D"color:rgb(181,=
+206,168)"> 0</span><span style=3D"color:rgb(212,212,212)"> ?</span><span st=
+yle=3D"color:rgb(206,145,120)"> &#39;in-cart&#39;</span><span style=3D"colo=
+r:rgb(212,212,212)"> :</span><span style=3D"color:rgb(206,145,120)"> &#39;&=
+#39;</span>) <span style=3D"color:rgb(212,212,212)">+</span><span style=3D"=
+color:rgb(206,145,120)"> &#39;&quot; onclick=3D&quot;event.stopPropagation(=
+);addToCart(</span><span style=3D"color:rgb(215,186,125)">\&#39;</span><spa=
+n style=3D"color:rgb(206,145,120)">&#39;</span><span style=3D"color:rgb(212=
+,212,212)"> +</span><span style=3D"color:rgb(156,220,254)"> p</span>.<span =
+style=3D"color:rgb(156,220,254)">productId</span><span style=3D"color:rgb(2=
+12,212,212)"> +</span><span style=3D"color:rgb(206,145,120)"> &#39;</span><=
+span style=3D"color:rgb(215,186,125)">\&#39;</span><span style=3D"color:rgb=
+(206,145,120)">)&quot;&gt;&#39;</span><span style=3D"color:rgb(212,212,212)=
+"> +</span> (<span style=3D"color:rgb(156,220,254)">qty2</span><span style=
+=3D"color:rgb(212,212,212)"> &gt;</span><span style=3D"color:rgb(181,206,16=
+8)"> 0</span><span style=3D"color:rgb(212,212,212)"> ?</span><span style=3D=
+"color:rgb(156,220,254)"> qty2</span><span style=3D"color:rgb(212,212,212)"=
+> :</span><span style=3D"color:rgb(206,145,120)"> &#39;+&#39;</span>) <span=
+ style=3D"color:rgb(212,212,212)">+</span><span style=3D"color:rgb(206,145,=
+120)"> &#39;&lt;/button&gt;&#39;</span>;</code></pre></div><div></div></div=
+><div></div></div></div>
+<h4 dir=3D"auto">PASO 7: Reemplazar el modal sugestivo completo</h4>
+<p dir=3D"auto" style=3D"white-space:pre-wrap">Busca este bloque:</p>
+<div dir=3D"auto"><div><div><div>HTML</div><div><div><div style=3D"opacity:=
+1"></div></div></div><div style=3D"border-radius:0px 0px 12px 12px;border-t=
+op-color:currentcolor;border-top-style:none;border-top-width:medium;padding=
+:0px 16px 16px;margin-top:0px;font-size:0.9em;font-family:var(--font-ibm-pl=
+ex-mono);line-height:1.5em;color:var(--fg-primary);overflow:auto"><pre tabi=
+ndex=3D"0" style=3D"background-color:rgb(34,34,34);color:rgb(230,230,230)">=
+<code><span style=3D"color:rgb(128,128,128)">&lt;</span><span style=3D"colo=
+r:rgb(86,156,214)">div</span><span style=3D"color:rgb(156,220,254)"> class<=
+/span>=3D<span style=3D"color:rgb(206,145,120)">&quot;modal-bg&quot;</span>=
+<span style=3D"color:rgb(156,220,254)"> id</span>=3D<span style=3D"color:rg=
+b(206,145,120)">&quot;csm-bg&quot;</span><span style=3D"color:rgb(156,220,2=
+54)"> onclick</span>=3D<span style=3D"color:rgb(206,145,120)">&quot;</span>=
+<span style=3D"color:rgb(197,134,192)">if</span><span style=3D"color:rgb(20=
+6,145,120)">(</span><span style=3D"color:rgb(156,220,254)">event</span><spa=
+n style=3D"color:rgb(206,145,120)">.</span><span style=3D"color:rgb(156,220=
+,254)">target</span><span style=3D"color:rgb(212,212,212)">=3D=3D=3D</span>=
+<span style=3D"color:rgb(86,156,214)">this</span><span style=3D"color:rgb(2=
+06,145,120)">)</span><span style=3D"color:rgb(220,220,170)">closeSuggestMod=
+al</span><span style=3D"color:rgb(206,145,120)">()&quot;</span><span style=
+=3D"color:rgb(128,128,128)">&gt;</span></code></pre></div><div></div></div>=
+<div></div></div></div>
+<p dir=3D"auto" style=3D"white-space:pre-wrap">Reemplaza <strong>todo el mo=
+dal</strong> (desde &lt;div class=3D&quot;modal-bg&quot; id=3D&quot;csm-bg&=
+quot; hasta su &lt;/div&gt; correspondiente) por este nuevo:</p>
+<div dir=3D"auto"><div><div><div>HTML</div><div><div><div style=3D"opacity:=
+1"></div></div></div><div style=3D"border-radius:0px 0px 12px 12px;border-t=
+op-color:currentcolor;border-top-style:none;border-top-width:medium;padding=
+:0px 16px 16px;margin-top:0px;font-size:0.9em;font-family:var(--font-ibm-pl=
+ex-mono);line-height:1.5em;color:var(--fg-primary);overflow:auto"><pre tabi=
+ndex=3D"0" style=3D"background-color:rgb(34,34,34);color:rgb(230,230,230)">=
+<code><span style=3D"color:rgb(128,128,128)">&lt;</span><span style=3D"colo=
+r:rgb(86,156,214)">div</span><span style=3D"color:rgb(156,220,254)"> class<=
+/span>=3D<span style=3D"color:rgb(206,145,120)">&quot;modal-bg&quot;</span>=
+<span style=3D"color:rgb(156,220,254)"> id</span>=3D<span style=3D"color:rg=
+b(206,145,120)">&quot;csm-bg&quot;</span><span style=3D"color:rgb(128,128,1=
+28)">&gt;</span>
+<span style=3D"color:rgb(128,128,128)">  &lt;</span><span style=3D"color:rg=
+b(86,156,214)">div</span><span style=3D"color:rgb(156,220,254)"> class</spa=
+n>=3D<span style=3D"color:rgb(206,145,120)">&quot;checkout-suggest-modal&qu=
+ot;</span><span style=3D"color:rgb(128,128,128)">&gt;</span>
+
+<span style=3D"color:rgb(106,153,85)">    &lt;!-- BLOQUE PRINCIPAL --&gt;</=
+span>
+<span style=3D"color:rgb(128,128,128)">    &lt;</span><span style=3D"color:=
+rgb(86,156,214)">div</span><span style=3D"color:rgb(156,220,254)"> id</span=
+>=3D<span style=3D"color:rgb(206,145,120)">&quot;csm-main-block&quot;</span=
+><span style=3D"color:rgb(128,128,128)">&gt;</span>
+<span style=3D"color:rgb(128,128,128)">      &lt;</span><span style=3D"colo=
+r:rgb(86,156,214)">div</span><span style=3D"color:rgb(156,220,254)"> class<=
+/span>=3D<span style=3D"color:rgb(206,145,120)">&quot;csm-icon&quot;</span>=
+<span style=3D"color:rgb(128,128,128)">&gt;</span>=F0=9F=9B=8D=EF=B8=8F<spa=
+n style=3D"color:rgb(128,128,128)">&lt;/</span><span style=3D"color:rgb(86,=
+156,214)">div</span><span style=3D"color:rgb(128,128,128)">&gt;</span>
+<span style=3D"color:rgb(128,128,128)">      &lt;</span><span style=3D"colo=
+r:rgb(86,156,214)">div</span><span style=3D"color:rgb(156,220,254)"> class<=
+/span>=3D<span style=3D"color:rgb(206,145,120)">&quot;csm-title&quot;</span=
+><span style=3D"color:rgb(128,128,128)">&gt;</span>=C2=BFC=C3=B3mo quieres =
+continuar?<span style=3D"color:rgb(128,128,128)">&lt;/</span><span style=3D=
+"color:rgb(86,156,214)">div</span><span style=3D"color:rgb(128,128,128)">&g=
+t;</span>
+<span style=3D"color:rgb(128,128,128)">      &lt;</span><span style=3D"colo=
+r:rgb(86,156,214)">div</span><span style=3D"color:rgb(156,220,254)"> class<=
+/span>=3D<span style=3D"color:rgb(206,145,120)">&quot;csm-sub&quot;</span><=
+span style=3D"color:rgb(128,128,128)">&gt;</span>Crea una cuenta para rastr=
+ear pedidos y acceder a precios especiales, o d=C3=A9janos solo tu tel=C3=
+=A9fono para contactarte.<span style=3D"color:rgb(128,128,128)">&lt;/</span=
+><span style=3D"color:rgb(86,156,214)">div</span><span style=3D"color:rgb(1=
+28,128,128)">&gt;</span>
+<span style=3D"color:rgb(128,128,128)">      &lt;</span><span style=3D"colo=
+r:rgb(86,156,214)">div</span><span style=3D"color:rgb(156,220,254)"> class<=
+/span>=3D<span style=3D"color:rgb(206,145,120)">&quot;csm-btns&quot;</span>=
+<span style=3D"color:rgb(128,128,128)">&gt;</span>
+<span style=3D"color:rgb(128,128,128)">        &lt;</span><span style=3D"co=
+lor:rgb(86,156,214)">button</span><span style=3D"color:rgb(156,220,254)"> c=
+lass</span>=3D<span style=3D"color:rgb(206,145,120)">&quot;csm-btn-primary&=
+quot;</span><span style=3D"color:rgb(156,220,254)"> onclick</span>=3D<span =
+style=3D"color:rgb(206,145,120)">&quot;</span><span style=3D"color:rgb(220,=
+220,170)">closeSuggestModal</span><span style=3D"color:rgb(206,145,120)">()=
+;</span><span style=3D"color:rgb(220,220,170)">showAuth</span><span style=
+=3D"color:rgb(206,145,120)">(&#39;register&#39;)&quot;</span><span style=3D=
+"color:rgb(128,128,128)">&gt;</span>
+          Crear cuenta gratis
+<span style=3D"color:rgb(128,128,128)">        &lt;/</span><span style=3D"c=
+olor:rgb(86,156,214)">button</span><span style=3D"color:rgb(128,128,128)">&=
+gt;</span>
+<span style=3D"color:rgb(128,128,128)">        &lt;</span><span style=3D"co=
+lor:rgb(86,156,214)">button</span><span style=3D"color:rgb(156,220,254)"> c=
+lass</span>=3D<span style=3D"color:rgb(206,145,120)">&quot;csm-btn-secondar=
+y&quot;</span><span style=3D"color:rgb(156,220,254)"> onclick</span>=3D<spa=
+n style=3D"color:rgb(206,145,120)">&quot;</span><span style=3D"color:rgb(22=
+0,220,170)">closeSuggestModal</span><span style=3D"color:rgb(206,145,120)">=
+();</span><span style=3D"color:rgb(220,220,170)">showAuth</span><span style=
+=3D"color:rgb(206,145,120)">(&#39;login&#39;)&quot;</span><span style=3D"co=
+lor:rgb(128,128,128)">&gt;</span>
+          Ya tengo cuenta
+<span style=3D"color:rgb(128,128,128)">        &lt;/</span><span style=3D"c=
+olor:rgb(86,156,214)">button</span><span style=3D"color:rgb(128,128,128)">&=
+gt;</span>
+<span style=3D"color:rgb(128,128,128)">        &lt;</span><span style=3D"co=
+lor:rgb(86,156,214)">button</span><span style=3D"color:rgb(156,220,254)"> c=
+lass</span>=3D<span style=3D"color:rgb(206,145,120)">&quot;csm-btn-ghost&qu=
+ot;</span><span style=3D"color:rgb(156,220,254)"> onclick</span>=3D<span st=
+yle=3D"color:rgb(206,145,120)">&quot;</span><span style=3D"color:rgb(220,22=
+0,170)">mostrarFormTelefono</span><span style=3D"color:rgb(206,145,120)">()=
+&quot;</span><span style=3D"color:rgb(128,128,128)">&gt;</span>
+          Solo dejar mi tel=C3=A9fono =E2=86=92
+<span style=3D"color:rgb(128,128,128)">        &lt;/</span><span style=3D"c=
+olor:rgb(86,156,214)">button</span><span style=3D"color:rgb(128,128,128)">&=
+gt;</span>
+<span style=3D"color:rgb(128,128,128)">        &lt;</span><span style=3D"co=
+lor:rgb(86,156,214)">div</span><span style=3D"color:rgb(156,220,254)"> styl=
+e</span>=3D<span style=3D"color:rgb(206,145,120)">&quot;border-top:1px soli=
+d var(--border);margin:8px 0&quot;</span><span style=3D"color:rgb(128,128,1=
+28)">&gt;&lt;/</span><span style=3D"color:rgb(86,156,214)">div</span><span =
+style=3D"color:rgb(128,128,128)">&gt;</span>
+<span style=3D"color:rgb(128,128,128)">        &lt;</span><span style=3D"co=
+lor:rgb(86,156,214)">button</span><span style=3D"color:rgb(156,220,254)"> c=
+lass</span>=3D<span style=3D"color:rgb(206,145,120)">&quot;csm-btn-ghost&qu=
+ot;</span><span style=3D"color:rgb(156,220,254)"> style</span>=3D<span styl=
+e=3D"color:rgb(206,145,120)">&quot;color:var(--danger);text-decoration:none=
+;font-size:11px&quot;</span><span style=3D"color:rgb(156,220,254)"> onclick=
+</span>=3D<span style=3D"color:rgb(206,145,120)">&quot;</span><span style=
+=3D"color:rgb(220,220,170)">abandonarPedido</span><span style=3D"color:rgb(=
+206,145,120)">()&quot;</span><span style=3D"color:rgb(128,128,128)">&gt;</s=
+pan>
+          Cancelar y vaciar carrito
+<span style=3D"color:rgb(128,128,128)">        &lt;/</span><span style=3D"c=
+olor:rgb(86,156,214)">button</span><span style=3D"color:rgb(128,128,128)">&=
+gt;</span>
+<span style=3D"color:rgb(128,128,128)">      &lt;/</span><span style=3D"col=
+or:rgb(86,156,214)">div</span><span style=3D"color:rgb(128,128,128)">&gt;</=
+span>
+<span style=3D"color:rgb(128,128,128)">    &lt;/</span><span style=3D"color=
+:rgb(86,156,214)">div</span><span style=3D"color:rgb(128,128,128)">&gt;</sp=
+an>
+
+<span style=3D"color:rgb(106,153,85)">    &lt;!-- BLOQUE TEL=C3=89FONO --&g=
+t;</span>
+<span style=3D"color:rgb(128,128,128)">    &lt;</span><span style=3D"color:=
+rgb(86,156,214)">div</span><span style=3D"color:rgb(156,220,254)"> id</span=
+>=3D<span style=3D"color:rgb(206,145,120)">&quot;csm-phone-block&quot;</spa=
+n><span style=3D"color:rgb(156,220,254)"> style</span>=3D<span style=3D"col=
+or:rgb(206,145,120)">&quot;display:none&quot;</span><span style=3D"color:rg=
+b(128,128,128)">&gt;</span>
+<span style=3D"color:rgb(128,128,128)">      &lt;</span><span style=3D"colo=
+r:rgb(86,156,214)">div</span><span style=3D"color:rgb(156,220,254)"> class<=
+/span>=3D<span style=3D"color:rgb(206,145,120)">&quot;csm-icon&quot;</span>=
+<span style=3D"color:rgb(128,128,128)">&gt;</span>=F0=9F=93=9E<span style=
+=3D"color:rgb(128,128,128)">&lt;/</span><span style=3D"color:rgb(86,156,214=
+)">div</span><span style=3D"color:rgb(128,128,128)">&gt;</span>
+<span style=3D"color:rgb(128,128,128)">      &lt;</span><span style=3D"colo=
+r:rgb(86,156,214)">div</span><span style=3D"color:rgb(156,220,254)"> class<=
+/span>=3D<span style=3D"color:rgb(206,145,120)">&quot;csm-title&quot;</span=
+><span style=3D"color:rgb(128,128,128)">&gt;</span>Tu n=C3=BAmero de contac=
+to<span style=3D"color:rgb(128,128,128)">&lt;/</span><span style=3D"color:r=
+gb(86,156,214)">div</span><span style=3D"color:rgb(128,128,128)">&gt;</span=
+>
+<span style=3D"color:rgb(128,128,128)">      &lt;</span><span style=3D"colo=
+r:rgb(86,156,214)">div</span><span style=3D"color:rgb(156,220,254)"> class<=
+/span>=3D<span style=3D"color:rgb(206,145,120)">&quot;csm-sub&quot;</span><=
+span style=3D"color:rgb(128,128,128)">&gt;</span>Te contactaremos por Whats=
+App para confirmar disponibilidad y cerrar tu pedido.<span style=3D"color:r=
+gb(128,128,128)">&lt;/</span><span style=3D"color:rgb(86,156,214)">div</spa=
+n><span style=3D"color:rgb(128,128,128)">&gt;</span>
+<span style=3D"color:rgb(128,128,128)">      &lt;</span><span style=3D"colo=
+r:rgb(86,156,214)">div</span><span style=3D"color:rgb(156,220,254)"> class<=
+/span>=3D<span style=3D"color:rgb(206,145,120)">&quot;fg&quot;</span><span =
+style=3D"color:rgb(156,220,254)"> style</span>=3D<span style=3D"color:rgb(2=
+06,145,120)">&quot;margin-bottom:8px;text-align:left&quot;</span><span styl=
+e=3D"color:rgb(128,128,128)">&gt;</span>
+<span style=3D"color:rgb(128,128,128)">        &lt;</span><span style=3D"co=
+lor:rgb(86,156,214)">label</span><span style=3D"color:rgb(156,220,254)"> st=
+yle</span>=3D<span style=3D"color:rgb(206,145,120)">&quot;display:block;fon=
+t-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;letter-spa=
+cing:.04em;text-transform:uppercase&quot;</span><span style=3D"color:rgb(12=
+8,128,128)">&gt;</span>Tel=C3=A9fono *<span style=3D"color:rgb(128,128,128)=
+">&lt;/</span><span style=3D"color:rgb(86,156,214)">label</span><span style=
+=3D"color:rgb(128,128,128)">&gt;</span>
+<span style=3D"color:rgb(128,128,128)">        &lt;</span><span style=3D"co=
+lor:rgb(86,156,214)">input</span><span style=3D"color:rgb(156,220,254)"> id=
+</span>=3D<span style=3D"color:rgb(206,145,120)">&quot;csm-telefono&quot;</=
+span><span style=3D"color:rgb(156,220,254)"> type</span>=3D<span style=3D"c=
+olor:rgb(206,145,120)">&quot;tel&quot;</span><span style=3D"color:rgb(156,2=
+20,254)"> placeholder</span>=3D<span style=3D"color:rgb(206,145,120)">&quot=
+;+52 xxx xxx xxxx&quot;</span>
+<span style=3D"color:rgb(156,220,254)">          style</span>=3D<span style=
+=3D"color:rgb(206,145,120)">&quot;width:100%;padding:10px 12px;border:1px s=
+olid var(--border);border-radius:var(--r);font-size:14px;font-family:var(--=
+font-b);color:var(--text);background:var(--surface);outline:none&quot;</spa=
+n>
+<span style=3D"color:rgb(156,220,254)">          onkeydown</span>=3D<span s=
+tyle=3D"color:rgb(206,145,120)">&quot;</span><span style=3D"color:rgb(197,1=
+34,192)">if</span><span style=3D"color:rgb(206,145,120)">(</span><span styl=
+e=3D"color:rgb(156,220,254)">event</span><span style=3D"color:rgb(206,145,1=
+20)">.</span><span style=3D"color:rgb(156,220,254)">key</span><span style=
+=3D"color:rgb(212,212,212)">=3D=3D=3D</span><span style=3D"color:rgb(206,14=
+5,120)">&#39;Enter&#39;)</span><span style=3D"color:rgb(220,220,170)">confi=
+rmarConTelefono</span><span style=3D"color:rgb(206,145,120)">()&quot;</span=
+><span style=3D"color:rgb(128,128,128)">/&gt;</span>
+<span style=3D"color:rgb(128,128,128)">      &lt;/</span><span style=3D"col=
+or:rgb(86,156,214)">div</span><span style=3D"color:rgb(128,128,128)">&gt;</=
+span>
+<span style=3D"color:rgb(128,128,128)">      &lt;</span><span style=3D"colo=
+r:rgb(86,156,214)">div</span><span style=3D"color:rgb(156,220,254)"> id</sp=
+an>=3D<span style=3D"color:rgb(206,145,120)">&quot;csm-err&quot;</span><spa=
+n style=3D"color:rgb(156,220,254)"> style</span>=3D<span style=3D"color:rgb=
+(206,145,120)">&quot;display:none;color:var(--danger);font-size:12px;margin=
+-bottom:8px;padding:8px 12px;background:#fce8e6;border-radius:var(--r);bord=
+er:1px solid #f5c6c2&quot;</span><span style=3D"color:rgb(128,128,128)">&gt=
+;&lt;/</span><span style=3D"color:rgb(86,156,214)">div</span><span style=3D=
+"color:rgb(128,128,128)">&gt;</span>
+<span style=3D"color:rgb(128,128,128)">      &lt;</span><span style=3D"colo=
+r:rgb(86,156,214)">div</span><span style=3D"color:rgb(156,220,254)"> class<=
+/span>=3D<span style=3D"color:rgb(206,145,120)">&quot;csm-btns&quot;</span>=
+<span style=3D"color:rgb(128,128,128)">&gt;</span>
+<span style=3D"color:rgb(128,128,128)">        &lt;</span><span style=3D"co=
+lor:rgb(86,156,214)">button</span><span style=3D"color:rgb(156,220,254)"> c=
+lass</span>=3D<span style=3D"color:rgb(206,145,120)">&quot;csm-btn-primary&=
+quot;</span><span style=3D"color:rgb(156,220,254)"> onclick</span>=3D<span =
+style=3D"color:rgb(206,145,120)">&quot;</span><span style=3D"color:rgb(220,=
+220,170)">confirmarConTelefono</span><span style=3D"color:rgb(206,145,120)"=
+>()&quot;</span><span style=3D"color:rgb(128,128,128)">&gt;</span>
+          Enviar pedido por WhatsApp
+<span style=3D"color:rgb(128,128,128)">        &lt;/</span><span style=3D"c=
+olor:rgb(86,156,214)">button</span><span style=3D"color:rgb(128,128,128)">&=
+gt;</span>
+<span style=3D"color:rgb(128,128,128)">        &lt;</span><span style=3D"co=
+lor:rgb(86,156,214)">button</span><span style=3D"color:rgb(156,220,254)"> c=
+lass</span>=3D<span style=3D"color:rgb(206,145,120)">&quot;csm-btn-ghost&qu=
+ot;</span><span style=3D"color:rgb(156,220,254)"> onclick</span>=3D<span st=
+yle=3D"color:rgb(206,145,120)">&quot;</span><span style=3D"color:rgb(220,22=
+0,170)">mostrarFormTelefono</span><span style=3D"color:rgb(206,145,120)">()=
+;</span><span style=3D"color:rgb(156,220,254)">document</span><span style=
+=3D"color:rgb(206,145,120)">.</span><span style=3D"color:rgb(220,220,170)">=
+getElementById</span><span style=3D"color:rgb(206,145,120)">(&#39;csm-main-=
+block&#39;).</span><span style=3D"color:rgb(156,220,254)">style</span><span=
+ style=3D"color:rgb(206,145,120)">.</span><span style=3D"color:rgb(156,220,=
+254)">display</span><span style=3D"color:rgb(212,212,212)">=3D</span><span =
+style=3D"color:rgb(206,145,120)">&#39;block&#39;;</span><span style=3D"colo=
+r:rgb(156,220,254)">document</span><span style=3D"color:rgb(206,145,120)">.=
+</span><span style=3D"color:rgb(220,220,170)">getElementById</span><span st=
+yle=3D"color:rgb(206,145,120)">(&#39;csm-phone-block&#39;).</span><span sty=
+le=3D"color:rgb(156,220,254)">style</span><span style=3D"color:rgb(206,145,=
+120)">.</span><span style=3D"color:rgb(156,220,254)">display</span><span st=
+yle=3D"color:rgb(212,212,212)">=3D</span><span style=3D"color:rgb(206,145,1=
+20)">&#39;none&#39;&quot;</span><span style=3D"color:rgb(128,128,128)">&gt;=
+</span>
+          =E2=86=90 Volver
+<span style=3D"color:rgb(128,128,128)">        &lt;/</span><span style=3D"c=
+olor:rgb(86,156,214)">button</span><span style=3D"color:rgb(128,128,128)">&=
+gt;</span>
+<span style=3D"color:rgb(128,128,128)">        &lt;</span><span style=3D"co=
+lor:rgb(86,156,214)">div</span><span style=3D"color:rgb(156,220,254)"> styl=
+e</span>=3D<span style=3D"color:rgb(206,145,120)">&quot;border-top:1px soli=
+d var(--border);margin:4px 0&quot;</span><span style=3D"color:rgb(128,128,1=
+28)">&gt;&lt;/</span><span style=3D"color:rgb(86,156,214)">div</span><span =
+style=3D"color:rgb(128,128,128)">&gt;</span>
+<span style=3D"color:rgb(128,128,128)">        &lt;</span><span style=3D"co=
+lor:rgb(86,156,214)">button</span><span style=3D"color:rgb(156,220,254)"> c=
+lass</span>=3D<span style=3D"color:rgb(206,145,120)">&quot;csm-btn-ghost&qu=
+ot;</span><span style=3D"color:rgb(156,220,254)"> style</span>=3D<span styl=
+e=3D"color:rgb(206,145,120)">&quot;color:var(--danger);text-decoration:none=
+;font-size:11px&quot;</span><span style=3D"color:rgb(156,220,254)"> onclick=
+</span>=3D<span style=3D"color:rgb(206,145,120)">&quot;</span><span style=
+=3D"color:rgb(220,220,170)">abandonarPedido</span><span style=3D"color:rgb(=
+206,145,120)">()&quot;</span><span style=3D"color:rgb(128,128,128)">&gt;</s=
+pan>
+          Cancelar y vaciar carrito
+<span style=3D"color:rgb(128,128,128)">        &lt;/</span><span style=3D"c=
+olor:rgb(86,156,214)">button</span><span style=3D"color:rgb(128,128,128)">&=
+gt;</span>
+<span style=3D"color:rgb(128,128,128)">      &lt;/</span><span style=3D"col=
+or:rgb(86,156,214)">div</span><span style=3D"color:rgb(128,128,128)">&gt;</=
+span>
+<span style=3D"color:rgb(128,128,128)">    &lt;/</span><span style=3D"color=
+:rgb(86,156,214)">div</span><span style=3D"color:rgb(128,128,128)">&gt;</sp=
+an>
+
+<span style=3D"color:rgb(128,128,128)">  &lt;/</span><span style=3D"color:r=
+gb(86,156,214)">div</span><span style=3D"color:rgb(128,128,128)">&gt;</span=
+>
+<span style=3D"color:rgb(128,128,128)">&lt;/</span><span style=3D"color:rgb=
+(86,156,214)">div</span><span style=3D"color:rgb(128,128,128)">&gt;</span><=
+/code></pre></div><div></div></div><div></div></div></div>
+<hr>
+<p dir=3D"auto" style=3D"white-space:pre-wrap"><strong>=C2=A1Listo!</strong=
+></p>
+<p dir=3D"auto" style=3D"white-space:pre-wrap">Sigue los 7 pasos en orden.
+Despu=C3=A9s de aplicar todos los cambios, guarda el archivo y prueba agreg=
+ando productos y dando clic en =E2=80=9CContinuar con el pedido=E2=80=9D si=
+n estar registrado.</p>
+<p dir=3D"auto" style=3D"white-space:pre-wrap"></p></div>
+
+--000000000000d6d7f8064f6bf7d1--
